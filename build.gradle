@@ -1,0 +1,33 @@
+plugins {
+    id 'java'
+}
+
+group 'org.molgenis'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+configurations {
+    extraLibs
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    extraLibs group: 'commons-cli', name: 'commons-cli', version: '1.2'
+
+    configurations.compile.extendsFrom(configurations.extraLibs)
+}
+
+jar {
+    archiveName = 'vkgl_consensus.jar'
+    manifest {
+        attributes 'Main-Class':'org.molgenis.vkgl_consensus.Main'
+    }
+    from {
+        configurations.extraLibs.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
